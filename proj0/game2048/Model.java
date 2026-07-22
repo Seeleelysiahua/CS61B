@@ -156,6 +156,16 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        int bSize =b.size();
+        for (int c = 0; c < bSize; c += 1){
+            for (int r = 0; r < bSize; r += 1){
+                if (b.tile(c, r) == null){
+                    continue;
+                } else if (b.tile(c, r).value() == MAX_PIECE) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -167,9 +177,66 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        int MaxtileNum = b.size() * b.size();
+        Tile[] tiles = new Tile[MaxtileNum];
+        int i = 0;
+        for (int c = 0; c < b.size(); c++) {
+                for (int r = 0; r < b.size(); r++) {
+                    tiles[i] = b.tile(c, r);
+                    i ++;
+                }
+        }
+
+        if (emptySpaceExists(b)){
+            return true;
+        }
+        for (int f = 0;f < MaxtileNum; f ++){
+            for (int n = f + 1; n < MaxtileNum; n ++){
+                Tile tf = tiles[f];
+                Tile tn = tiles[n];
+                if (tileValueEqual(tf, tn)){
+                    if (ifAdjacentTile(tf, tn)){
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
-
+    /**
+     * @param a one Tile
+     * @param b one Tile
+     * @return 判断两个tile值是否相等
+     */
+    private static boolean tileValueEqual(Tile a, Tile b){
+        if (a.value() == b.value()){
+            return true;
+        }
+        return false;
+    }
+    private static boolean ifAdjacentTile(Tile a, Tile b){
+        int aCLeft = a.col() - 1;
+        int aCRight = a.col() + 1;
+        int aRLeft = a.row() - 1;
+        int aRRight = a.row() + 1;
+        if (b.row() == a.row()){
+            if (b.col() == aCLeft){
+                return true;
+            }
+            else if (b.col() == aCRight) {
+                return true;
+            }
+        }
+        else if( b.col() == a.col()){
+            if (b.row() == aRLeft) {
+                return true;
+            }
+            else if (b.row() == aRRight) {
+                return  true;
+            }
+        }
+        return false;
+    }
 
     @Override
      /** Returns the model as a string, used for debugging. */
