@@ -109,10 +109,17 @@ public class Model extends Observable {
     public boolean tilt(Side side) {
         boolean changed;
         changed = false;
+        board.setViewingPerspective(side);
 
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+
+        for (int col = 0; col < board.size(); col ++) {
+            boolean moved = moveOneConlumn(col);
+            changed = changed || moved;
+        }
+        board.setViewingPerspective(Side.NORTH);
 
         checkGameOver();
         if (changed) {
@@ -121,9 +128,62 @@ public class Model extends Observable {
         return changed;
     }
 
-    /** Checks if the game is over and sets the gameOver variable
-     *  appropriately.
-     */
+    private boolean moveOneConlumn(int c){
+        Tile[] tiles = allTiles(c);
+        boolean[] merge = shouldMerged(tiles);
+        int targetRow = board.size() - 1;
+        boolean changed = false;
+        for (int i = 0; i < tiles.length; i++) {
+            Tile tile = tiles[i];
+            if (tile == null){
+                break;
+            }
+            if (merge[i]) {
+                changed = board.move(c, targetRow + 1, tile);
+                score += tile.next().value();
+            }
+            else {
+                board.move(c, targetRow, tile);
+                if (tile.row() != targetRow) {
+                    changed = true;
+                }
+                targetRow --;
+            }
+        }
+        return changed;
+    }
+
+    private Tile [] allTiles(int c){
+        Tile[] tiles = new Tile[board.size()];
+        int count = 0;
+        for (int r = board.size() - 1; r >= 0; r --){
+            if(board.tile(c, r) != null){
+                tiles[count] = board.tile(c, r);
+                count ++;
+            }
+        }
+        return tiles;
+    }
+
+    private boolean[] shouldMerged(Tile[] t){
+        boolean[] merge = new boolean[t.length];
+        boolean skipNext = false;
+        for (int i = 0; i < t.length; i ++ ){
+            if(t[i] == null){
+                break;
+            }
+            if(skipNext){
+                skipNext = false;
+                continue;
+            }
+            if (i + 1 < t.length && t[i + 1] != null && t[i].value() == t[i + 1].value()) {
+                skipNext = true;
+                merge[i + 1] = true;
+            }
+        }
+        return merge;
+    }
+    /** Checks if the game is over and sets the gameOver variable*  appropriately.*/
     private void checkGameOver() {
         gameOver = checkGameOver(board);
     }
