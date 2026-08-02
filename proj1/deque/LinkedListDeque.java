@@ -1,6 +1,8 @@
 package deque;
 
-public class LinkedListDeque<Item> {
+import java.util.Iterator;
+
+public class LinkedListDeque<Item> implements Deque<Item>, Iterable<Item> {
     private Node sentinel;
     private int size;
 
@@ -23,10 +25,12 @@ public class LinkedListDeque<Item> {
         size = 0;
     }
 
-    public boolean isEmpty() {
-        return sentinel.next == sentinel;
+    @Override
+    public int size(){
+        return size;
     }
 
+    @Override
     public void addLast(Item d) {
         Node node = new Node(d);
         node.pre = sentinel.pre;
@@ -36,6 +40,7 @@ public class LinkedListDeque<Item> {
         size ++;
     }
 
+    @Override
     public void addFirst(Item item) {
         Node node = new Node(item);
         node.pre = sentinel;
@@ -45,12 +50,9 @@ public class LinkedListDeque<Item> {
         size ++;
     }
 
-    public int size(){
-        return size;
-    }
-
+    @Override
     public Item get(int index){
-        if (index >= size){
+        if (index >= size || index < 0) {
             return null;
         }
         int i = 0;
@@ -63,7 +65,7 @@ public class LinkedListDeque<Item> {
     }
 
     public Item getRecursive(int index){
-        if (index >= size){
+        if (index >= size || index < 0){
             return null;
         }
         else {
@@ -71,7 +73,7 @@ public class LinkedListDeque<Item> {
         }
     }
 
-    public Item getRecursiveHelper(int index, Node node){
+    private Item getRecursiveHelper(int index, Node node){
         if (index == 0){
             return node.data;
         }
@@ -80,7 +82,7 @@ public class LinkedListDeque<Item> {
         }
     }
 
-
+    @Override
     public Item removeFirst(){
         if (size == 0){
             return null;
@@ -93,6 +95,7 @@ public class LinkedListDeque<Item> {
         return data;
     }
 
+    @Override
     public Item removeLast(){
         if (size == 0){
             return null;
@@ -106,37 +109,60 @@ public class LinkedListDeque<Item> {
         return data;
     }
 
-
+    @Override
     public void printDeque(){
         Node current = sentinel.next;
         String result = "";
 
         while (current != sentinel){
-            result += current.data + " ";
+            Item data = current.data;
+            result += data.toString() + " ";
             current = current.next;
 
         }
 
         System.out.println(result);
-        System.out.println();
     }
 
 
     public boolean equals(Object o){
-        boolean ifequal = false;
-
-        if (o instanceof LinkedListDeque && size == ((LinkedListDeque)o).size()){
-            for (int i = 0; i < size(); i++){
-                if (((LinkedListDeque<?>) o).get(i) == this.get(i)){
-                    ifequal = true;
-                }
-                else {
-                    ifequal = false;
-                    break;
-                }
-            }
+        if (this == o) {
+            return true;
         }
 
-        return ifequal;
+        if (o instanceof Deque<?> && size == ((Deque<?>)o).size()){
+            for (int i = 0; i < size(); i++){
+                if(!((Deque<?>) o).get(i).equals(this.get(i))){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    public Iterator<Item> iterator() {
+        return new getIterator();
+    }
+
+    private class getIterator implements Iterator<Item>{
+        private int wizPos;
+        private  Node current = sentinel;
+
+        public getIterator() {
+            wizPos = 0;
+        }
+
+        public boolean hasNext() {
+            return wizPos < size;
+        }
+
+        public Item next() {
+            Item item = current.next.data;
+            current = current.next;
+            wizPos ++;
+            return item;
+        }
     }
 }

@@ -2,23 +2,20 @@ package deque;
 
 import edu.princeton.cs.algs4.StdRandom;
 import org.junit.Test;
+import org.junit.Assert;
 
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
-/** Performs some basic linked list tests. */
-public class LinkedListDequeTest {
-
-    @Test
-    /** Adds a few things to the list, checking isEmpty() and size() are correct,
-     * finally printing the results.
-     *
-     * && is the "and" operation. */
+public class ArrayDequeTest {
     public void addIsEmptySizeTest() {
 
-        LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
+        ArrayDeque<String> lld1 = new ArrayDeque<String>();
 
         assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
         lld1.addFirst("front");
@@ -40,7 +37,7 @@ public class LinkedListDequeTest {
     @Test
     /** Adds an item, then removes an item, and ensures that dll is empty afterwards. */
     public void addRemoveTest() {
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
 
         assertTrue("lld1 should be empty upon initialization", lld1.isEmpty());
 
@@ -56,7 +53,7 @@ public class LinkedListDequeTest {
     @Test
     /* Tests removing from an empty deque */
     public void removeEmptyTest() {
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<>();
         lld1.addFirst(3);
 
         lld1.removeLast();
@@ -73,11 +70,11 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* Check if you can create LinkedListDeques with different parameterized types*/
+    /* Check if you can create ArrayDeques with different parameterized types*/
     public void multipleParamTest() {
-        LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
-        LinkedListDeque<Double> lld2 = new LinkedListDeque<Double>();
-        LinkedListDeque<Boolean> lld3 = new LinkedListDeque<Boolean>();
+        ArrayDeque<String> lld1 = new ArrayDeque<String>();
+        ArrayDeque<Double> lld2 = new ArrayDeque<Double>();
+        ArrayDeque<Boolean> lld3 = new ArrayDeque<Boolean>();
 
         lld1.addFirst("string");
         lld2.addFirst(3.14159);
@@ -89,9 +86,9 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    /* check if null is return when removing from an empty LinkedListDeque. */
+    /* check if null is return when removing from an empty ArrayDeque. */
     public void emptyNullReturnTest() {
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
 
         boolean passed1 = false;
         boolean passed2 = false;
@@ -103,7 +100,7 @@ public class LinkedListDequeTest {
     @Test
     /* Add large number of elements to deque; check if order is correct. */
     public void bigLLDequeTest() {
-        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
         for (int i = 0; i < 1000000; i++) {
             lld1.addLast(i);
         }
@@ -122,7 +119,7 @@ public class LinkedListDequeTest {
     @Test
     //测试isempty()
     public void isemptyTest() {
-        LinkedListDeque deque = new LinkedListDeque();
+        ArrayDeque deque = new ArrayDeque();
         assertTrue(deque.isEmpty());
     }
 
@@ -130,7 +127,7 @@ public class LinkedListDequeTest {
     //测试addFirst()
 
     public void addFirstTest() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
+        ArrayDeque<Integer> deque = new ArrayDeque();
         deque.addFirst(1);
         deque.addFirst(2);
         assertFalse(deque.isEmpty());
@@ -140,7 +137,7 @@ public class LinkedListDequeTest {
 
     @Test
     public void addLastTest() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
+        ArrayDeque<Integer> deque = new ArrayDeque();
         deque.addLast(1);
         deque.addLast(2);
         assertFalse(deque.isEmpty());
@@ -151,7 +148,7 @@ public class LinkedListDequeTest {
     @Test
     //测试get（）[4, 1, 2, 3]
     public void getTest0() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
+        ArrayDeque<Integer> deque = new ArrayDeque();
         deque.addLast(1);
         deque.addLast(2);
         deque.addLast(3);
@@ -164,7 +161,7 @@ public class LinkedListDequeTest {
 
     @Test
     public void getTest1() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
+        ArrayDeque<Integer> deque = new ArrayDeque();
         for (int i = 0; i < 100; i++) {
             deque.addLast(i);
         }
@@ -174,7 +171,7 @@ public class LinkedListDequeTest {
 
     @Test
     public void getRecursiveTest0() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
+        ArrayDeque<Integer> deque = new ArrayDeque();
 
         deque.addLast(1);
         deque.addLast(2);
@@ -182,26 +179,23 @@ public class LinkedListDequeTest {
         deque.addFirst(4);
 
         assertEquals(4, deque.size());
-        assertEquals(3, (long) deque.getRecursive(3));
-        assertEquals(2, (long) deque.getRecursive(2));
     }
 
     @Test
     public void getRecursiveTest1() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
+        ArrayDeque<Integer> deque = new ArrayDeque();
 
         for (int i = 0; i < 100; i++) {
             deque.addLast(i);
         }
 
         assertEquals(100, deque.size());
-        assertEquals(99, (long) deque.getRecursive(99));
     }
 
     @Test
     //测试边界情况
     public void removeFirstTest0() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
+        ArrayDeque<Integer> deque = new ArrayDeque();
 
         deque.addLast(1);
         deque.removeFirst();
@@ -212,7 +206,7 @@ public class LinkedListDequeTest {
 
     @Test
     public void removeFirstTest() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
+        ArrayDeque<Integer> deque = new ArrayDeque();
         deque.addLast(5);
         deque.addLast(2);
         deque.addLast(3);
@@ -223,7 +217,7 @@ public class LinkedListDequeTest {
 
     @Test
     public void removeFirstTest2() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
+        ArrayDeque<Integer> deque = new ArrayDeque();
 
         for (int i = 0; i < 100; i++) {
             deque.addLast(i);
@@ -237,7 +231,7 @@ public class LinkedListDequeTest {
     @Test
     //测试边界情况
     public void removeLastTest0() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
+        ArrayDeque<Integer> deque = new ArrayDeque();
 
         deque.addLast(1);
         deque.removeLast();
@@ -248,7 +242,7 @@ public class LinkedListDequeTest {
 
     @Test
     public void removeLastTest1() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
+        ArrayDeque<Integer> deque = new ArrayDeque();
 
         deque.addLast(1);
         deque.addLast(2);
@@ -263,7 +257,7 @@ public class LinkedListDequeTest {
 
     @Test
     public void removeLastTest2() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
+        ArrayDeque<Integer> deque = new ArrayDeque();
 
         for (int i = 0; i < 100; i++) {
             deque.addLast(i);
@@ -278,7 +272,7 @@ public class LinkedListDequeTest {
 
     @Test
     public void printDequeTest() {
-        LinkedListDeque<String> deque = new LinkedListDeque();
+        ArrayDeque<String> deque = new ArrayDeque();
 
         deque.addLast("seele");
         deque.addLast("HUA");
@@ -289,7 +283,7 @@ public class LinkedListDequeTest {
 
     @Test
     public void printDequeTest2() {
-        LinkedListDeque<String> deque = new LinkedListDeque();
+        ArrayDeque<String> deque = new ArrayDeque();
 
         deque.addLast("seele");
         deque.addLast("elysia");
@@ -298,25 +292,12 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    public void printDequeTest3() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque();
-
-        deque.addLast(1);
-        deque.addLast(2);
-        deque.addLast(3);
-        deque.addLast(4);
-        deque.addFirst(5);
-
-        deque.printDeque();
-    }
-
-    @Test
     public void equalTest() {
-        LinkedListDeque<String> deque1 = new LinkedListDeque();
+        ArrayDeque<String> deque1 = new ArrayDeque();
         deque1.addLast("seele");
         deque1.addLast("elysia");
 
-        LinkedListDeque<String> deque2 = new LinkedListDeque();
+        ArrayDeque<String> deque2 = new ArrayDeque();
         deque2.addLast("seele");
         deque2.addLast("elysia");
 
@@ -327,11 +308,11 @@ public class LinkedListDequeTest {
 
     @Test
     public void equalTest2() {
-        LinkedListDeque<Integer> deque1 = new LinkedListDeque();
+        ArrayDeque<Integer> deque1 = new ArrayDeque();
         deque1.addLast(1);
         deque1.addLast(2);
 
-        LinkedListDeque<Integer> deque2 = new LinkedListDeque();
+        ArrayDeque<Integer> deque2 = new ArrayDeque();
         deque2.addLast(1);
         deque2.addLast(2);
 
@@ -341,10 +322,10 @@ public class LinkedListDequeTest {
 
     }
 
-        @Test
-        //随机测试
+    @Test
+    //随机测试
     public void randomizedTest() {
-        LinkedListDeque<Integer> L = new LinkedListDeque<>();
+        ArrayDeque<Integer> L = new ArrayDeque<>();
 
         int N = 5000;
         for (int i = 0; i < N; i += 1) {
@@ -371,8 +352,8 @@ public class LinkedListDequeTest {
     }
 
     @Test
-    public void IteratorTest() {
-        LinkedListDeque<Integer> deque = new LinkedListDeque<>();
+    public void IteratorTest0() {
+        ArrayDeque<Integer> deque = new ArrayDeque<>();
         deque.addLast(1);
         deque.addLast(2);
         deque.addLast(3);
@@ -389,5 +370,19 @@ public class LinkedListDequeTest {
         assertTrue(iterator.next() == 4);
         assertFalse(iterator.hasNext());
 
+    }
+
+    @Test
+    public void IteratorTest1() {
+        ArrayDeque<Integer> deque = new ArrayDeque<>();
+        deque.addLast(1);
+        deque.addLast(2);
+        deque.addLast(3);
+        deque.addLast(4);
+
+        Iterator<Integer> iterator = deque.iterator();
+        for(Integer i : deque){
+            assertTrue(iterator.next() == i);
+        }
     }
 }
