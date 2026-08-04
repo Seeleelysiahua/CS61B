@@ -24,7 +24,7 @@ import java.util.List;
  */
 class Utils {
 
-    /* READING AND WRITING FILE CONTENTS */
+    /* READING AND WRITING FILE CONTENTS  */
 
     /** Return the entire contents of FILE as a byte array.  FILE must
      *  be a normal file.  Throws IllegalArgumentException
