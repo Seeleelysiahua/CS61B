@@ -1,7 +1,6 @@
 package bstmap;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     private BSTNode root;
@@ -20,6 +19,36 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             this.right = null;
         }
 
+    }
+
+    private class BSTIterator implements Iterator<K> {
+        private ArrayDeque<BSTNode> callStack;
+
+        private void pushLeft(BSTNode node) {
+            while (node != null) {
+                callStack.push(node);
+                node = node.left;
+            }
+        }
+
+        public BSTIterator() {
+            callStack =  new ArrayDeque<BSTNode>();
+            pushLeft(root);
+
+       }
+
+        public boolean hasNext() {
+            return !callStack.isEmpty();
+        }
+
+        public K next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            BSTNode node = callStack.pop();
+            pushLeft(node.right);
+            return node.key;
+        }
     }
 
     private BSTNode putHelper(K key, V value, BSTNode node) {
@@ -72,7 +101,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     }
 
-    private boolean conrainKeyHelper(K key, BSTNode node) {
+    private boolean containKeyHelper(K key, BSTNode node) {
         if (node == null) {
             return false;
         }
@@ -80,15 +109,73 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         int cmp = key.compareTo(node.key);
 
         if (cmp < 0) {
-            return conrainKeyHelper(key, node.left);
+            return containKeyHelper(key, node.left);
         }
 
         if (cmp > 0) {
-            return conrainKeyHelper(key, node.right);
+            return containKeyHelper(key, node.right);
         }
 
         return true;
 
+    }
+
+    private BSTNode findSuccessorHelper(BSTNode node) {
+        if (node.left == null) {
+            return node;
+        }
+        return findSuccessorHelper(node.left);
+    }
+
+    private BSTNode removeHelper(K key, BSTNode node) {
+        if (node == null) {
+            return null;
+        }
+
+        int compare = key.compareTo(node.key);
+        if (compare < 0) {
+            node.left = removeHelper(key, node.left);
+        }
+        else if (compare > 0) {
+            node.right = removeHelper(key, node.right);
+        }
+
+        else {
+            if (node.left == null && node.right == null) {
+                size--;
+                return null;
+            }
+
+            else if (node.left == null) {
+                size --;
+                return node.right;
+            }
+
+            else if (node.right == null) {
+                size --;
+                return node.left;
+            }
+
+            else{
+                BSTNode successor = findSuccessorHelper(node.right);
+                node.key = successor.key;
+                node.value = successor.value;
+                node.right = removeHelper(successor.key, node.right);
+                return node;
+            }
+
+        }
+        return node;
+    }
+
+    private void keySetHelper(Set<K> set, BSTNode node) {
+        if (node == null) {
+            return;
+        }
+
+        keySetHelper(set, node.left);
+        keySetHelper(set, node.right);
+        set.add(node.key);
     }
 
     public BSTMap() {
@@ -101,7 +188,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     }
 
     public boolean containsKey(K key) {
-        return conrainKeyHelper(key, root);
+        return containKeyHelper(key, root);
     }
 
     public V get(K key) {
@@ -117,19 +204,32 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     }
 
     public Set<K> keySet() {
-        throw new UnsupportedOperationException();
+        HashSet<K> set = new HashSet<>();
+        keySetHelper(set, root);
+
+        return set;
     }
 
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        V value = get(key);
+
+        if (value == null) {
+            return null;
+        }
+
+        root = removeHelper(key, root);
+        return value;
     }
 
     public V remove(K key, V value) {
-        throw new UnsupportedOperationException();
+        if(value != null && containsKey(key) && value.equals(get(key))) {
+            return remove(key);
+        }
+        return null;
     }
 
     public Iterator<K> iterator() {
-        throw new UnsupportedOperationException();
+        return new BSTIterator();
     }
 
     public void printInOrder() {
