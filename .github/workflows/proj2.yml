@@ -1,0 +1,31 @@
+name: proj2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/proj2.yml'
+      - 'proj2/**'
+      - 'library-sp21/**'
+  pull_request:
+    paths:
+      - '.github/workflows/proj2.yml'
+      - 'proj2/**'
+      - 'library-sp21/**'
+
+jobs:
+  test:
+    name: make check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Run tests
+        run: make check
+        working-directory: proj2
