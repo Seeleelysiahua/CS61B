@@ -30,3 +30,6 @@ lab6/capers/sentinel
 # Archives
 *.zip
 *.tar.gz
+
+# Make build stamps
+**/sentinel
